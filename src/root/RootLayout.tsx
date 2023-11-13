@@ -1,7 +1,7 @@
 import BottomNavigation from '@/components/shared/BottomNavigation'
 import SideNavigation from '@/components/shared/SideNavigation'
 import TopNavigation from '@/components/shared/TopNavigation'
-import React, { Fragment } from 'react'
+import React from 'react'
 import { Outlet } from 'react-router-dom'
 
 const RootLayout: React.FC<any> = () => {

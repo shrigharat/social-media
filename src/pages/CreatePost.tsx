@@ -1,5 +1,4 @@
 import CreatePostForm from '@/components/forms/CreatePostForm'
-import React from 'react'
 
 const CreatePost = () => {
   return (

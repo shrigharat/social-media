@@ -1,4 +1,3 @@
-import React from 'react'
 import './globals.css';
 import { Route, Routes } from 'react-router-dom';
 import { AllUsers, CreatePost, EditPost, Explore, HomePage, PostDetails, Profile, Saved, SignInPage, SignUpPage } from './pages';

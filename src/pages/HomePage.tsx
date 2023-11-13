@@ -3,7 +3,6 @@ import PostCard from '@/components/shared/PostCard';
 import UserCard from '@/components/shared/UserCard';
 import { useGetRecentPosts, useGetUsers } from '@/lib/react-query/queries'
 import { Models } from 'appwrite'
-import React from 'react'
 
 const HomePage = () => {
   

@@ -6,8 +6,6 @@ import LikeIcon from './LikeIcon';
 import { checkIsLiked } from '@/lib/utils';
 import CommentIcon from './CommentIcon';
 import { Input } from '../ui/input';
-import EmojiIcon from './EmojiPickerIcon';
-import { Button } from '../ui/button';
 import { IComment } from '@/types';
 import SendIcon from './SendIcon';
 

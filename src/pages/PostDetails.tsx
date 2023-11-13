@@ -151,7 +151,7 @@ const PostDetails = () => {
         {
           relatedPostsLoading ? (
             <Loader />
-          ) : (
+          ) : userRelatedPosts && (
             <PostsGrid 
               posts={userRelatedPosts}
             />
