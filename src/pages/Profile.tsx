@@ -1,0 +1,119 @@
+import Loader from "@/components/shared/Loader";
+import PostsGrid from "@/components/shared/PostsGrid";
+import { Button } from "@/components/ui/button";
+import { useUserContext } from "@/context/AuthContext";
+import { useGetCurrentUser, useGetUserPosts } from "@/lib/react-query/queries";
+import { Link, useParams } from "react-router-dom"
+
+const Profile = () => {
+
+  const {id} = useParams();
+  const {user: currentUser} = useUserContext();
+  const {data: user, isLoading: isUserLoading} = useGetCurrentUser();
+  const {data: userPosts, isLoading: postsLoading} = useGetUserPosts(id);
+
+  if(isUserLoading) {
+    return (
+      <Loader />
+    )
+  } else if(!isUserLoading && !user) {
+    return (
+      <h3>Could not load user profile. Please refresh the page.</h3>
+    )
+  }
+
+  console.log({user});
+  
+
+  return (
+    <div className="profile-container">
+      <div className="account-details flex justify-start items-start gap-8">
+        <div className="mr-12">
+          <img 
+            src={user?.imageUrl || '/assets/icons/profile-placeholder.svg'} 
+            alt="user profile image" 
+            className="rounded-full"
+            width={150}
+            height={150}
+          />
+        </div>
+
+        <div className="flex flex-col gap-8">
+          <div className="top-section flex gap-12">
+            <div className="name-section flex-col">
+              <h1 className="text-3xl">{user?.name}</h1>
+              <p className="subtle-semibold lg:small-regular text-light-3">@{user?.username}</p>
+            </div>
+            <div className="action-buttons flex gap-4">
+              <Button className="shad-button_primary">
+                Follow
+              </Button>
+              {
+                id === currentUser.id && (
+                  <Link to='/update-profile'>
+                    <Button className="border-slate-300 border-2">
+                      Edit profile
+                    </Button>
+                  </Link>
+                )
+              }
+            </div>
+          </div>
+
+          <div className="follower-info flex gap-8 justify-start items-center">
+            <div className="followers">
+              <span className="mr-2 font-medium text-primary-500">123</span>
+              <span>posts</span>
+            </div>
+            <div className="posts">
+              <span className="mr-2 font-medium text-primary-500">1.1k</span>
+              <span>followers</span>
+            </div>
+          </div>
+
+          <div className="bio">
+            { user?.bio.split('\n').map((str: string) => {
+              return (
+                <>
+                  <div className="text-sm">{str}</div>
+                </>
+              )
+            }) || '' }
+          </div>
+        </div>
+      </div>
+
+      <div className="posts-grid">
+        {
+          postsLoading ? (
+            <Loader />
+          ) : !postsLoading && userPosts && (
+            <PostsGrid 
+              posts={userPosts} 
+              showStats={false}
+              showUser={false}
+            />
+          )
+        }
+        {
+          !postsLoading && userPosts && !userPosts?.length && (
+            <div className="flex flex-col items-center justify-center">
+                <div className="text-2xl text-slate-500 font-semibold">
+                    <img 
+                        src="/assets/icons/camera.svg" 
+                        alt="no posts icon" 
+                        width={32}
+                        height={32}
+                    />
+                </div>
+                <div>No posts yet</div>
+            </div>
+          )
+        }
+
+      </div>
+    </div>
+  )
+}
+
+export default Profile
