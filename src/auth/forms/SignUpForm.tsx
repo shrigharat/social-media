@@ -20,6 +20,8 @@ const SignUpForm = () => {
 
   const {checkAuthUser, isLoading: isUserLoading} = useUserContext();
 
+  console.log(isUserLoading, isSigningIn);
+
   const form = useForm<z.infer<typeof SignupValidationSchema>>({
     resolver: zodResolver(SignupValidationSchema),
     defaultValues: {

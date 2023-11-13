@@ -1,6 +1,6 @@
 import './globals.css';
 import { Route, Routes } from 'react-router-dom';
-import { AllUsers, CreatePost, EditPost, Explore, HomePage, PostDetails, Profile, Saved, SignInPage, SignUpPage } from './pages';
+import { AllUsers, CreatePost, EditPost, Explore, HomePage, PostDetails, Profile, Saved } from './pages';
 import AuthLayout from './auth/AuthLayout';
 import SignInForm from './auth/forms/SignInForm';
 import SignUpForm from './auth/forms/SignUpForm';

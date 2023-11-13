@@ -9,6 +9,9 @@ const HomePage = () => {
   const {data: posts, isLoading, isError} = useGetRecentPosts();
   const {data: creators, isLoading: isCreatorsLoading} = useGetUsers();
 
+  console.log(isError);
+  
+
   return (
     <div className='flex flex-1'>
       <div className="home-container">

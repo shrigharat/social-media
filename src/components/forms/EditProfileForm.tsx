@@ -139,7 +139,7 @@ const EditProfileForm = ({user}: EditProfileFormType) => {
                         type="submit" 
                         className='shad-button_primary whitespace-nowrap'
                         disabled={isUpdating} 
-                        onClick={(e) => onSubmit(form.getValues())}
+                        onClick={(_) => onSubmit(form.getValues())}
                     >
                         {
                             isUpdating && <Loader thickness={1} size={16} />
