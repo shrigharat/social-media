@@ -1,0 +1,47 @@
+.imageSkeleton {
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+    filter: blur(10px);
+}
+
+.imageSkeleton img{
+    opacity: 0;
+    transition: opacity .5s;
+    object-fit: cover;
+    object-position: center;
+}
+
+.imageSkeleton.loaded{
+    filter: none;
+}
+
+.imageSkeleton.loaded img{
+    opacity: 1;
+}
+
+.imageSkeleton::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    animation: pulse 2.5s infinite;
+    background-color: white;
+}
+
+.imageSkeleton.loaded::before {
+    content: none;
+    animation: none;
+}
+
+@keyframes pulse {
+    0% {
+      opacity: 0;
+    }
+    50% {
+      opacity: 0.1;
+    }
+    100% {
+      opacity: 0;
+    }
+}

@@ -11,18 +11,18 @@ const BottomNavigation = () => {
                     const isActive = pathname === link.route;
                     return (
                         <Link 
-                            className={`${isActive && 'rounded-[10px] bg-primary-500'} flex-center flex-col p-2 transition`} 
+                            className={`${isActive && 'rounded-[10px] bg-primary-500/20'} flex-center flex-col p-3 transition`} 
                             key={`bottombar-${link.label}`} 
                             to={link.route}
                         >
                             <img 
                                 src={link.imgURL} 
                                 alt={link.label} 
-                                width={16}
-                                height={16}
-                                className={`${isActive && 'invert-white'}`}
+                                width={20}
+                                height={20}
+                                className={`${isActive && 'filled'}`}
                             />
-                            <p className='tiny-medium text-medium-2'>{link.label}</p>
+                            {/* <p className='tiny-medium text-medium-2'>{link.label}</p> */}
                         </Link>
                     )
                 })

@@ -69,6 +69,7 @@ const PostStats = ({post, userId}: PostStatsProps) => {
         };
         let commentsArray: IComment[] = [...comments, newComment];
         setComments(commentsArray);
+        setCommentText('');
     }
 
     const handleSavePost = (e: React.MouseEvent<HTMLOrSVGElement, MouseEvent>) => {
@@ -147,7 +148,7 @@ const PostStats = ({post, userId}: PostStatsProps) => {
 
             {
                 comments.length > 0 && (
-                    <div className="comments-section px-3 pb-5 flex-col gap-3 items-start">
+                    <div className="comments-section px-3 pb-5 flex flex-col gap-3 items-start">
                         {
                             comments.map((comment) => (
                                 <div className='comment flex justify-left items-center gap-3'>

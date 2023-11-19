@@ -358,6 +358,23 @@ export async function unSavePost(savedDocumentId: string) {
     }
 }
 
+export async function getSavedPosts(userId?: string) {
+    try {
+        if(!userId) throw Error;
+
+        const savedPosts = await databases.listDocuments(
+            appwriteConfig.databaseId,
+            appwriteConfig.savesCollectionId,
+            [Query.search('user', userId)]
+        )
+        if(!savedPosts.documents) throw Error;
+
+        return savedPosts.documents;
+    } catch (error) {
+        
+    }
+}
+
 export async function getUserPosts(userId?: string) {
     if(!userId) return;
 

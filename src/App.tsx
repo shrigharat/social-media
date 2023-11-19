@@ -7,6 +7,7 @@ import SignUpForm from './auth/forms/SignUpForm';
 import RootLayout from './root/RootLayout';
 import { Toaster } from './components/ui/toaster';
 import UpdateProfile from './pages/UpdateProfile';
+import Notifications from './pages/Notifications';
 
 const App = () => {
   return (
@@ -24,6 +25,7 @@ const App = () => {
                 <Route path="/posts/:id" element={<PostDetails />} />
                 <Route path="/profile/:id/*" element={<Profile />} />
                 <Route path="/update-profile/" element={<UpdateProfile />} />
+                <Route path="/notifications/" element={<Notifications />} />
             </Route>
 
             {/* public Routes */}

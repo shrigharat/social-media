@@ -50,7 +50,7 @@ const SideNavigation = () => {
               const isActive = pathname === link.route;
 
               return (
-                <li className={`leftsidebar-link ${isActive && 'bg-primary-500/10 text-primary-600'}`} key={link.label}> 
+                <li className={`leftsidebar-link ${isActive && 'bg-primary-500/10 text-primary-500'}`} key={link.label}> 
                   <NavLink to={link.route} className="flex gap-2 items-center px-4 py-3">
                     <img 
                       src={link.imgURL} 

@@ -2,14 +2,14 @@ import Loader from "@/components/shared/Loader";
 import PostsGrid from "@/components/shared/PostsGrid";
 import { Button } from "@/components/ui/button";
 import { useUserContext } from "@/context/AuthContext";
-import { useGetCurrentUser, useGetUserPosts } from "@/lib/react-query/queries";
+import { useGetCurrentUser, useGetUserById, useGetUserPosts } from "@/lib/react-query/queries";
 import { Link, useParams } from "react-router-dom"
 
 const Profile = () => {
 
   const {id} = useParams();
   const {user: currentUser} = useUserContext();
-  const {data: user, isLoading: isUserLoading} = useGetCurrentUser();
+  const {data: user, isLoading: isUserLoading} = useGetUserById(id);
   const {data: userPosts, isLoading: postsLoading} = useGetUserPosts(id);
 
   if(isUserLoading) {

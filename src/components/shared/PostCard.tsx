@@ -3,6 +3,7 @@ import { Models } from 'appwrite'
 import { Link } from 'react-router-dom'
 import PostStats from './PostStats'
 import { multiFormatDateString } from '@/lib/utils'
+import styles from './PostCard.module.css';
 
 type PostCardProps = {
     post: Models.Document
@@ -12,6 +13,17 @@ const PostCard = ({post}: PostCardProps) => {
     const {user} = useUserContext();
 
     if(!post.creator) return;
+
+    let skeletonImageUrl = `${post.imageUrl}&width=80&height=90`;
+
+    const handleOriginalImageLoad = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+        console.log({target: (e.target as HTMLImageElement)});
+        
+        let skeletonDiv = (e.target as HTMLImageElement).parentNode;
+        console.log({skeletonDiv});
+        
+        (skeletonDiv as HTMLDivElement).classList.add(styles.loaded);
+    }
 
     return (
         <div className="post-card">
@@ -25,6 +37,7 @@ const PostCard = ({post}: PostCardProps) => {
                             }
                             alt="creator"
                             className='w-12 lg:h-12 rounded-full' 
+                            loading='lazy'
                         />
                     </Link>
 
@@ -74,11 +87,18 @@ const PostCard = ({post}: PostCardProps) => {
                         }
                     </ul>
                 </div>
-                <img 
-                    src={post.imageUrl || "/assets/icons/profile-placeholder.svg"} 
-                    alt="post image"
-                    className='post-card_img' 
-                />
+                <div 
+                    className={styles.imageSkeleton} 
+                    style={{backgroundImage: `url(${skeletonImageUrl})`}}
+                >
+                    <img 
+                        src={post.imageUrl || "/assets/icons/profile-placeholder.svg"} 
+                        alt="post image"
+                        className='post-card_img'
+                        loading='lazy' 
+                        onLoad={handleOriginalImageLoad}
+                    />
+                </div>
             </Link>
 
             <PostStats 
