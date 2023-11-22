@@ -3,6 +3,7 @@ import PostCard from '@/components/shared/PostCard';
 import UserCard from '@/components/shared/UserCard';
 import { useGetRecentPosts, useGetUsers } from '@/lib/react-query/queries'
 import { Models } from 'appwrite'
+import { Link } from 'react-router-dom';
 
 const HomePage = () => {
   
@@ -27,7 +28,7 @@ const HomePage = () => {
             Home Feed
             {
               isLoading && !posts ? (
-                <div className='w-full mt-4'>
+                <div className='w-full mt-4 h-40 flex justify-center items-center'>
                   <Loader />
                 </div>
               ) : (
@@ -50,7 +51,9 @@ const HomePage = () => {
           </h3>
           {
             isCreatorsLoading && !creators ? (
-              <Loader />
+              <div className='h-10 flex justify-center items-center'>
+                <Loader size={20} />
+              </div>
             ) : (
               <ul className='grid 2xl:grid-cols-2 gap-3'>
                 {
@@ -63,9 +66,9 @@ const HomePage = () => {
               </ul>
             )
           }
-          <div className='text-primary-500 text-center text-sm mt-2 cursor-pointer'>
+          <Link to='/all-users' className='w-full block text-primary-500 text-center text-sm mt-2 cursor-pointer'>
             See all
-          </div>
+          </Link>
         </div>
 
         <div className='bg-dark-3 border border-gray-800 py-3 px-2 rounded-md'>
@@ -74,7 +77,9 @@ const HomePage = () => {
           </h3>
           {
             isCreatorsLoading && !creators ? (
-              <Loader />
+              <div className='h-10 flex justify-center items-center'>
+                <Loader size={20} />
+              </div>
             ) : (
               <ul className='grid 2xl:grid-cols-2 gap-4'>
                 {

@@ -9,9 +9,14 @@ import { Link, useParams } from "react-router-dom"
 const Profile = () => {
 
   const {id} = useParams();
-  const {user: currentUser} = useUserContext();
+  const {user: currentUser, setShowLoginDialog} = useUserContext();
   const {data: user, isLoading: isUserLoading} = useGetUserById(id);
   const {data: userPosts, isLoading: postsLoading} = useGetUserPosts(id);
+
+  const handleFollowButton = (e: any) => {
+    e.stopPropagation();
+    setShowLoginDialog(true);
+  }
 
   if(isUserLoading) {
     return (
@@ -45,7 +50,7 @@ const Profile = () => {
               <p className="subtle-semibold lg:small-regular text-light-3">@{user?.username}</p>
             </div>
             <div className="action-buttons flex gap-4">
-              <Button className="shad-button_primary">
+              <Button className="shad-button_primary" onClick={handleFollowButton}>
                 Follow
               </Button>
               {

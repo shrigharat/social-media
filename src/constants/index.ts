@@ -22,16 +22,19 @@ export const sidebarLinks = [
     imgURL: "/assets/icons/bookmark.svg",
     route: "/saved",
     label: "Saved",
+    requireLogin: true,
   },
   {
     imgURL: "/assets/icons/notification.svg",
     route: "/notifications",
-    label: "Notifications"
+    label: "Notifications",
+    requireLogin: true,
   },
   {
     imgURL: "/assets/icons/gallery-add.svg",
     route: "/create-post",
     label: "Create Post",
+    requireLogin: true,
   },
 ];
 

@@ -1,16 +1,18 @@
 import { useEffect } from 'react'
-import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '../ui/button';
 import { useUserContext } from '@/context/AuthContext';
 import { useSignOut } from '@/lib/react-query/queries';
 import { sidebarLinks } from '@/constants';
 import { INavLink } from '@/types';
+import LazyImage from './LazyImage';
+import { LoginDialog } from './LoginDialog';
 
 const SideNavigation = () => {
   const navigate = useNavigate();
   const {pathname} = useLocation();
   const {mutate: signOut, isSuccess} = useSignOut();
-  const {user, isAuthenticated} = useUserContext();
+  const {user, isAuthenticated, handleRouteChange, showLoginDialog} = useUserContext();
   const userId = user.id;
 
   useEffect(() => {
@@ -30,19 +32,27 @@ const SideNavigation = () => {
             height={325}
           />
         </Link>
-        <Link to={`/profile/${userId}`} className='flex-start gap-3'>
-          <img 
-            src={user.imageUrl || '/assets/icons/profile-placeholder.svg'} 
-            alt="profile picture" 
-            width={32}
-            height={32}
-            className='rounded-full'
-          />
-          <div className='flex flex-col'>
-            <p className='body-bold'>{user.name || "Anonymous User"}</p>
-            <p className='small-regular text-light-3'>@{user.username || "anonymous"}</p>
-          </div>
-        </Link>
+        {
+          isAuthenticated ? (
+            <Link to={`/profile/${userId}`} className='flex-start gap-3 relative overflow-hidden'>
+              <>
+                <LazyImage 
+                  imageUrl={user.imageUrl || '/assets/icons/profile-placeholder.svg'} 
+                  alt='profile picture'
+                  className='rounded-full w-[32px] h-[32px]'
+                />
+                <div className='flex flex-col'>
+                  <p className='body-bold'>{user.name || "Anonymous User"}</p>
+                  <p className='small-regular text-light-3'>@{user.username || "anonymous"}</p>
+                </div>
+              </>
+            </Link>
+          ) : (
+            <Link to='/sign-in' className='w-full border border-primary-500 bg-primary-500/10 mb-8 text-center text-primary-500 font-semibold rounded-md p-2'>
+              Login
+            </Link>
+          )
+        }
 
         <ul className='flex flex-col gap-3'>
           {
@@ -50,15 +60,15 @@ const SideNavigation = () => {
               const isActive = pathname === link.route;
 
               return (
-                <li className={`leftsidebar-link ${isActive && 'bg-primary-500/10 text-primary-500'}`} key={link.label}> 
-                  <NavLink to={link.route} className="flex gap-2 items-center px-4 py-3">
+                <li onClick={() => handleRouteChange(link)} className={`leftsidebar-link cursor-pointer ${isActive && 'bg-primary-500/10 text-primary-500'}`} key={link.label}> 
+                  <Button className="flex gap-2 items-center px-4 py-6">
                     <img 
                       src={link.imgURL} 
                       alt={`${link.label} icon`} 
                       className={`group-hover:invert-white`}
                     />
                     {link.label}
-                  </NavLink>
+                  </Button>
                 </li>
               )
             })
@@ -75,6 +85,12 @@ const SideNavigation = () => {
           >
             <img src="/assets/icons/logout.svg" alt="logout" /> Logout
           </Button>
+        )
+      }
+
+      {
+        showLoginDialog && (
+          <LoginDialog />
         )
       }
     </nav>

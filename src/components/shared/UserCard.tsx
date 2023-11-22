@@ -8,7 +8,6 @@ type UserCardProps = {
 }
 
 const UserCard = ({ user }: UserCardProps) => {
-
     return (
         <Link to={`/profile/${user.$id}`} className="user-card">
             <div className="relative overflow-hidden rounded-full">

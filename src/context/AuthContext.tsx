@@ -1,5 +1,5 @@
 import { getCurrentUser } from '@/lib/appwrite/api';
-import { IContextType, IUser } from '@/types';
+import { IContextType, INavLink, IUser } from '@/types';
 import {createContext, useContext, useEffect, useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -18,7 +18,10 @@ const INITIAL_STATE = {
     isAuthenticated: false,
     setUser: () => {},
     setIsAuthenticated: () => {},
-    checkAuthUser: async () => false as boolean
+    checkAuthUser: async () => false as boolean,
+    showLoginDialog: false,
+    handleRouteChange: () => {},
+    setShowLoginDialog: () => {}
 }
 
 const AuthContext = createContext<IContextType>(INITIAL_STATE);
@@ -27,7 +30,16 @@ const AuthProvider = ({children}: {children: React.ReactNode}) => {
     const [user, setUser] = useState<IUser>(INITIAL_USER);
     const [isLoading, setIsLoading] = useState(false);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [showLoginDialog, setShowLoginDialog] = useState(false);
     const navigate = useNavigate();
+
+    const handleRouteChange = (routeObj: INavLink) => {
+        if (!isAuthenticated && routeObj.requireLogin) {
+            setShowLoginDialog(true);
+        } else {
+            navigate(routeObj.route);
+        }
+    }
 
     const checkAuthUser = async () => {
         try {
@@ -73,7 +85,10 @@ const AuthProvider = ({children}: {children: React.ReactNode}) => {
         isLoading,
         isAuthenticated,
         setIsAuthenticated,
-        checkAuthUser
+        checkAuthUser,
+        handleRouteChange,
+        showLoginDialog,
+        setShowLoginDialog
     }
 
     return (

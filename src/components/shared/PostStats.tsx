@@ -9,6 +9,8 @@ import { Input } from '../ui/input';
 import { IComment } from '@/types';
 import SendIcon from './SendIcon';
 import { NOTIFICATION_TYPES } from '@/constants';
+import SaveIcon from './SaveIcon';
+import { useUserContext } from '@/context/AuthContext';
 
 type PostStatsProps = {
     post: Models.Document;
@@ -27,6 +29,7 @@ const PostStats = ({post, userId, enableComments = false}: PostStatsProps) => {
     const [comments, setComments] = useState<IComment[]>([]);
 
     const {data: currentUser} = useGetCurrentUser();
+    const {isAuthenticated, setShowLoginDialog} = useUserContext();
 
     const {mutate: likePost} = useLikePost();
     const {mutate: sendLikeNotification} = useSendLikeNotification();
@@ -43,6 +46,11 @@ const PostStats = ({post, userId, enableComments = false}: PostStatsProps) => {
 
     const handleLikePost = (e: React.MouseEvent<HTMLOrSVGElement, MouseEvent>) => {
         e.stopPropagation();
+
+        if(!isAuthenticated) {
+            setShowLoginDialog(true);
+            return;
+        }
 
         let likesArray = [...likes];
 
@@ -67,6 +75,10 @@ const PostStats = ({post, userId, enableComments = false}: PostStatsProps) => {
 
     const handleCommentClick = (e: React.MouseEvent<HTMLOrSVGElement, MouseEvent>) => {
         e.stopPropagation();
+        if(!isAuthenticated) {
+            setShowLoginDialog(true);
+            return;
+        }
         setShowComments((prev) => !prev);
     }
 
@@ -86,7 +98,11 @@ const PostStats = ({post, userId, enableComments = false}: PostStatsProps) => {
 
     const handleSavePost = (e: React.MouseEvent<HTMLOrSVGElement, MouseEvent>) => {
         e.stopPropagation();
-
+        if(!isAuthenticated) {
+            setShowLoginDialog(true);
+            return;
+        }
+        
         if(savedPostRecord) {
             setIsSaved(false);
             return unSavePost(savedPostRecord.$id);
@@ -122,13 +138,11 @@ const PostStats = ({post, userId, enableComments = false}: PostStatsProps) => {
                     }
                 </div>
                 <div className="flex gap-2">
-                    <img
-                        src={isSaved ? "/assets/icons/saved.svg" : "/assets/icons/save.svg"}
-                        alt="share"
+                    <SaveIcon 
                         width={20}
                         height={20}
-                        className="cursor-pointer"
-                        onClick={(e) => handleSavePost(e)}
+                        filled={isSaved}
+                        onClick={(e: any) => handleSavePost(e)}
                     />
                 </div>
             </div>

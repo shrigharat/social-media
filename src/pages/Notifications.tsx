@@ -57,7 +57,7 @@ const Notifications = () => {
                       </div>
                       {
                         notification?.postId && (
-                          <Link to={`/posts/${notification.postId}`} className="bg-primary-500/10 text-primary-500 ml-auto px-3 py-2 rounded-md">
+                          <Link to={`/posts/${notification.postId}`} className="bg-primary-500/10 text-center text-xs lg:text-sm text-primary-500 ml-auto px-3 py-2 rounded-md">
                             Go to post
                           </Link>
                         )

@@ -5,6 +5,7 @@ export type INavLink = {
     imgURL: string;
     route: string;
     label: string;
+    requireLogin?: boolean;
 };
   
 export type IUpdateUser = {
@@ -23,6 +24,9 @@ export type IContextType = {
     isAuthenticated: boolean;
     setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
     checkAuthUser: () => Promise<boolean>;
+    handleRouteChange: (newRoute: INavLink) => void;
+    showLoginDialog: boolean;
+    setShowLoginDialog: Function;
 };
   
 export type INewPost = {

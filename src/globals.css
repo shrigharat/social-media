@@ -32,6 +32,10 @@
   background-color: currentColor;
 }
 
+.ReactModal__Overlay{
+  background-color: rgba(0,0,0,.75) !important;
+}
+
 /* .soft-primary{
   background-color: ;
 } */

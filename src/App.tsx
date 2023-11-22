@@ -8,8 +8,12 @@ import RootLayout from './root/RootLayout';
 import { Toaster } from './components/ui/toaster';
 import UpdateProfile from './pages/UpdateProfile';
 import Notifications from './pages/Notifications';
+import Modal from 'react-modal';
+
+Modal.setAppElement('#root');
 
 const App = () => {
+
   return (
     <main className='flex h-screen'>
         <Routes>
