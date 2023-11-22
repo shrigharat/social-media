@@ -1,6 +1,7 @@
 import { Models } from "appwrite"
 import { Link } from "react-router-dom";
 import { Button } from "../ui/button";
+import LazyImage from "./LazyImage";
 
 type UserCardProps = {
     user: Models.Document;
@@ -10,12 +11,14 @@ const UserCard = ({ user }: UserCardProps) => {
 
     return (
         <Link to={`/profile/${user.$id}`} className="user-card">
-            <div className="image-skeleton">
-                <img 
-                    src={user.imageUrl || '/assets/icons/profile-placeholder.svg'} 
+            <div className="relative overflow-hidden rounded-full">
+                <LazyImage 
+                    imageUrl={
+                        user.imageUrl || 
+                        "/assets/icons/profile-placeholder.svg"
+                    }
                     alt={ `${user.name}'s profile image` || "user profile image"} 
                     className="rounded-full w-10 h-10"
-                    loading="lazy"
                 />
             </div>
             <div className="flex items-start flex-col ">

@@ -1,4 +1,4 @@
-import { useDeleteSavedPost, useGetCurrentUser, useLikePost, useSavePost } from '@/lib/react-query/queries';
+import { useDeleteSavedPost, useGetCurrentUser, useLikePost, useSavePost, useSendLikeNotification } from '@/lib/react-query/queries';
 import { Models } from 'appwrite'
 import React, { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom';
@@ -8,13 +8,15 @@ import CommentIcon from './CommentIcon';
 import { Input } from '../ui/input';
 import { IComment } from '@/types';
 import SendIcon from './SendIcon';
+import { NOTIFICATION_TYPES } from '@/constants';
 
 type PostStatsProps = {
     post: Models.Document;
     userId: string;
+    enableComments?: boolean;
 }
 
-const PostStats = ({post, userId}: PostStatsProps) => {
+const PostStats = ({post, userId, enableComments = false}: PostStatsProps) => {
     const location = useLocation();
     const likesList = post.likes.map((user: Models.Document) => user.$id)
 
@@ -27,6 +29,7 @@ const PostStats = ({post, userId}: PostStatsProps) => {
     const {data: currentUser} = useGetCurrentUser();
 
     const {mutate: likePost} = useLikePost();
+    const {mutate: sendLikeNotification} = useSendLikeNotification();
     const {mutate: savePost} = useSavePost();
     const {mutate: unSavePost} = useDeleteSavedPost();
 
@@ -44,9 +47,18 @@ const PostStats = ({post, userId}: PostStatsProps) => {
         let likesArray = [...likes];
 
         if(likesArray.includes(userId)) {
-            likesArray = likesArray.filter(currentUserId => currentUserId !== userId)
+            likesArray = likesArray.filter(currentUserId => currentUserId !== userId);
         } else {
             likesArray.push(userId);
+            if(post?.creator && currentUser?.$id) {
+                sendLikeNotification({
+                    postId: post.$id,
+                    recipientId: post.creator.$id,
+                    senderId: currentUser?.$id || '',
+                    senderUsername: currentUser?.username || '',
+                    type: NOTIFICATION_TYPES.POST_LIKED
+                });
+            }
         }
 
         setLikes(likesArray);
@@ -88,7 +100,7 @@ const PostStats = ({post, userId}: PostStatsProps) => {
 
     return (
         <div className="flex flex-col">
-            <div className={`flex justify-between items-center z-20 px-3 pb-5 ${containerStyles} ${showComments ? 'pb-3' : 'pb-5'}`}>
+            <div className={`flex justify-between items-center z-20 px-3 ${containerStyles} ${enableComments ? showComments ? 'pb-3' : 'pb-5' : ''}`}>
                 <div className="flex items-center gap-2 mr-5">
                     <LikeIcon 
                         width={24}
@@ -99,11 +111,15 @@ const PostStats = ({post, userId}: PostStatsProps) => {
                     <p className="small-medium lg:base-medium mr-2">
                         {likes.length}
                     </p>
-                    <CommentIcon
-                        width={32}
-                        height={28}
-                        onClick={handleCommentClick}
-                    />
+                    {
+                        enableComments && (
+                            <CommentIcon
+                                width={32}
+                                height={28}
+                                onClick={handleCommentClick}
+                            />
+                        )
+                    }
                 </div>
                 <div className="flex gap-2">
                     <img

@@ -1,3 +1,4 @@
+import LazyImage from '@/components/shared/LazyImage'
 import Loader from '@/components/shared/Loader'
 import PostStats from '@/components/shared/PostStats'
 import PostsGrid from '@/components/shared/PostsGrid'
@@ -52,11 +53,18 @@ const PostDetails = () => {
           <Loader />
         ) : (
           <div className="post_details-card">
-            <img
+            <div className="relative overflow-hidden post_details-img">
+              <LazyImage 
+                imageUrl={post?.imageUrl}
+                alt="creator"
+                className="rounded-lg"
+              />
+            </div>
+            {/* <img
               src={post?.imageUrl}
               alt="creator"
               className="post_details-img"
-            />
+            /> */}
 
             <div className="post_details-info">
               <div className="flex-between w-full">
@@ -134,6 +142,7 @@ const PostDetails = () => {
                 <PostStats 
                   post={post} 
                   userId={user.id} 
+                  enableComments={true}
                 />
               </div>
             </div>

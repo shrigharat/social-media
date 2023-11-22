@@ -3,7 +3,7 @@ import { Models } from 'appwrite'
 import { Link } from 'react-router-dom'
 import PostStats from './PostStats'
 import { multiFormatDateString } from '@/lib/utils'
-import styles from './PostCard.module.css';
+import LazyImage from './LazyImage'
 
 type PostCardProps = {
     post: Models.Document
@@ -14,30 +14,21 @@ const PostCard = ({post}: PostCardProps) => {
 
     if(!post.creator) return;
 
-    let skeletonImageUrl = `${post.imageUrl}&width=80&height=90`;
-
-    const handleOriginalImageLoad = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-        console.log({target: (e.target as HTMLImageElement)});
-        
-        let skeletonDiv = (e.target as HTMLImageElement).parentNode;
-        console.log({skeletonDiv});
-        
-        (skeletonDiv as HTMLDivElement).classList.add(styles.loaded);
-    }
+    console.log({post});
+    
 
     return (
         <div className="post-card">
             <div className="flex-between px-3 pt-5">
                 <div className="flex items-center gap-3">
-                    <Link to={`/profile/${post.creator.$id}`}>
-                        <img 
-                            src={
+                    <Link to={`/profile/${post.creator.$id}`} className='relative overflow-hidden rounded-full'>
+                        <LazyImage 
+                            imageUrl={
                                 post.creator?.imageUrl || 
                                 "/assets/icons/profile-placeholder.svg"
                             }
-                            alt="creator"
-                            className='w-12 lg:h-12 rounded-full' 
-                            loading='lazy'
+                            alt='creator image'
+                            className='w-12 lg:h-12 rounded-full'
                         />
                     </Link>
 
@@ -77,26 +68,21 @@ const PostCard = ({post}: PostCardProps) => {
                     <p className='tracking-normal font-normal text-light-2'>
                         {post.caption.split('\n').map((line: string) => (<p>{line}</p>))}
                     </p>
-                    <ul className="flex gap-1 mt-2">
+                    <ul className="flex gap-1 mt-2 flex-wrap">
                         {
-                            post.tags.map((tag: string, index: string) => {
+                            post.tags.map((tag: string, index: string) => (
                                 <li key={index} className="text-light-3 small-regular">
                                     #{tag}
                                 </li>
-                            })
+                            ))
                         }
                     </ul>
                 </div>
-                <div 
-                    className={styles.imageSkeleton} 
-                    style={{backgroundImage: `url(${skeletonImageUrl})`}}
-                >
-                    <img 
-                        src={post.imageUrl || "/assets/icons/profile-placeholder.svg"} 
-                        alt="post image"
+                <div className='relative overflow-hidden'>
+                    <LazyImage
+                        imageUrl={post.imageUrl}
                         className='post-card_img'
-                        loading='lazy' 
-                        onLoad={handleOriginalImageLoad}
+                        alt='post image'
                     />
                 </div>
             </Link>
@@ -104,6 +90,7 @@ const PostCard = ({post}: PostCardProps) => {
             <PostStats 
                 post={post} 
                 userId={user.id} 
+                enableComments={true}
             />
         </div>
     )

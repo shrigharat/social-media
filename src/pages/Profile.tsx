@@ -1,8 +1,9 @@
+import LazyImage from "@/components/shared/LazyImage";
 import Loader from "@/components/shared/Loader";
 import PostsGrid from "@/components/shared/PostsGrid";
 import { Button } from "@/components/ui/button";
 import { useUserContext } from "@/context/AuthContext";
-import { useGetCurrentUser, useGetUserById, useGetUserPosts } from "@/lib/react-query/queries";
+import { useGetUserById, useGetUserPosts } from "@/lib/react-query/queries";
 import { Link, useParams } from "react-router-dom"
 
 const Profile = () => {
@@ -28,13 +29,12 @@ const Profile = () => {
   return (
     <div className="profile-container">
       <div className="account-details flex justify-start items-start gap-8">
-        <div className="mr-12">
-          <img 
-            src={user?.imageUrl || '/assets/icons/profile-placeholder.svg'} 
+        <div className="mr-12 relative overflow-hidden rounded-full">
+          <LazyImage 
+            imageUrl={user?.imageUrl || '/assets/icons/profile-placeholder.svg'} 
             alt="user profile image" 
-            className="rounded-full"
-            width={150}
-            height={150}
+            className="rounded-full w-[150px] h-[150px]"
+            blur={6}
           />
         </div>
 

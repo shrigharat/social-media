@@ -1,6 +1,7 @@
-import { INewPost, INewUser, IUpdatePost, IUpdateUser } from "@/types";
+import { INewPost, INewUser, INotificationParam, IUpdatePost, IUpdateUser } from "@/types";
 import { account, appwriteConfig, avatars, databases, storage } from "./config";
 import { ID, Query } from "appwrite";
+import { getAccountCreationNotification } from "@/constants";
 
 export async function createUserAccount(user: INewUser) {
     try {
@@ -42,7 +43,12 @@ export async function saveUserToDB(user: {
             ID.unique(),
             user
         );
-        
+        await databases.createDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.notificationsCollectionId,
+            ID.unique(),
+            getAccountCreationNotification(newUser.$id)
+        );
         return newUser;
     } catch (error) {
         console.log(error);
@@ -277,6 +283,34 @@ export async function searchPosts(searchTerm: string) {
         if(!posts) throw Error;
 
         return posts;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export async function sendNotification({
+    recipientId, 
+    senderId,
+    senderUsername,
+    type,
+    postId
+}: INotificationParam) {
+    try {
+        const newNotification = {
+            type,
+            recipientId,
+            senderId,
+            senderUsername,
+            postId,
+            timestamp: new Date().toISOString()
+        }
+        await databases.createDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.notificationsCollectionId,
+            ID.unique(),
+            newNotification
+        )
+        return true;
     } catch (error) {
         console.log(error);
     }

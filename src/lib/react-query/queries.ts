@@ -4,8 +4,8 @@ import {
     useQueryClient,
     useInfiniteQuery
 } from '@tanstack/react-query'
-import { createPost, createUserAccount, deletePost, getCurrentUser, getPostById, getPosts, getRecentPosts, getSavedPosts, getUserById, getUserPosts, getUsers, likePost, savePost, searchPosts, signInAccount, signOutAccount, unSavePost, updatePost, updatedUser } from '../appwrite/api'
-import { INewPost, INewUser, IUpdatePost, IUpdateUser } from '@/types'
+import { createPost, createUserAccount, deletePost, getCurrentUser, getPostById, getPosts, getRecentPosts, getSavedPosts, getUserById, getUserPosts, getUsers, likePost, savePost, searchPosts, sendNotification, signInAccount, signOutAccount, unSavePost, updatePost, updatedUser } from '../appwrite/api'
+import { INewPost, INewUser, INotificationParam, IUpdatePost, IUpdateUser } from '@/types'
 import { QUERY_KEYS } from './queryKeys'
 
 export const useCreateUserAccount = () => {
@@ -150,6 +150,12 @@ export const useLikePost = () => {
       },
     });
 };
+
+export const useSendLikeNotification = () => {
+  return useMutation({
+    mutationFn: (notification: INotificationParam) => sendNotification(notification),
+  });
+}
   
 export const useSavePost = () => {
     const queryClient = useQueryClient();

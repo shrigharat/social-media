@@ -33,6 +33,8 @@ const AuthProvider = ({children}: {children: React.ReactNode}) => {
         try {
             setIsLoading(true);
             const currentAccount = await getCurrentUser();
+            console.log({currentAccount});
+            
             if(currentAccount) {
                 setUser({
                     id: currentAccount.$id,
@@ -40,7 +42,8 @@ const AuthProvider = ({children}: {children: React.ReactNode}) => {
                     username: currentAccount.username,
                     email:  currentAccount.email,
                     imageUrl: currentAccount.imageUrl,
-                    bio: currentAccount.bio
+                    bio: currentAccount.bio,
+                    notifications: currentAccount.notifications
                 });
                 setIsAuthenticated(true);
                 return true

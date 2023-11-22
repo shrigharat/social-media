@@ -10,7 +10,7 @@ const SideNavigation = () => {
   const navigate = useNavigate();
   const {pathname} = useLocation();
   const {mutate: signOut, isSuccess} = useSignOut();
-  const {user} = useUserContext();
+  const {user, isAuthenticated} = useUserContext();
   const userId = user.id;
 
   useEffect(() => {
@@ -66,13 +66,17 @@ const SideNavigation = () => {
         </ul>
       </div>
 
-      <Button
-        variant="ghost"
-        className="shad-button_ghost"
-        onClick={() => signOut()}
-      >
-        <img src="/assets/icons/logout.svg" alt="logout" />
-      </Button>
+      {
+        isAuthenticated && (
+          <Button
+            variant="ghost"
+            className="shad-button_ghost"
+            onClick={() => signOut()}
+          >
+            <img src="/assets/icons/logout.svg" alt="logout" /> Logout
+          </Button>
+        )
+      }
     </nav>
   )
 }

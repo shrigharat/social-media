@@ -1,3 +1,4 @@
+import { NOTIFICATION_TYPES } from "@/constants";
 import { Models } from "appwrite";
 
 export type INavLink = {
@@ -49,6 +50,7 @@ export type IUser = {
     email: string;
     imageUrl: string;
     bio: string;
+    notifications?: INotificationForRecipient[];
 };
   
 export type INewUser = {
@@ -72,3 +74,19 @@ export type IComment = {
     userName: string;
     text: string;
 }
+
+type NotificationKeys = keyof typeof NOTIFICATION_TYPES;
+export type NotificationType = (typeof NOTIFICATION_TYPES)[NotificationKeys];
+
+export type INotification = {
+    type: NotificationType;
+    recipientId: string;
+    senderId: string;
+    senderUsername: string;
+    timestamp: string;
+    postId: string;
+}
+
+export type INotificationParam = Omit<INotification, 'timestamp'>;
+
+export type INotificationForRecipient = Omit<INotification, 'recipientId'>;

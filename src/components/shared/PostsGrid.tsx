@@ -2,6 +2,7 @@ import { useUserContext } from "@/context/AuthContext";
 import { Models } from "appwrite"
 import { Link } from "react-router-dom";
 import PostStats from "./PostStats";
+import LazyImage from "./LazyImage";
 
 type PostsGridProps = {
     posts: Models.Document[];
@@ -22,8 +23,8 @@ const PostsGrid = ({
                 posts?.map((post: Models.Document) => (
                     <li className="relative min-w-80 h-80">
                         <Link to={`/posts/${post.$id}`} className="grid-post_link">
-                            <img 
-                                src={post.imageUrl} 
+                            <LazyImage 
+                                imageUrl={post.imageUrl}
                                 alt="post image" 
                                 className="h-full w-full object-cover"
                             />
