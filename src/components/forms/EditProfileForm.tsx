@@ -35,8 +35,6 @@ const EditProfileForm = ({user}: EditProfileFormType) => {
             file: [],
         },
     });
-
-    console.log({isUpdating});
     
 
     useEffect(() => {        
@@ -47,15 +45,11 @@ const EditProfileForm = ({user}: EditProfileFormType) => {
 
     const handleFileSelect = (e: any) => {
         e.preventDefault();
-        console.log(e.target.files);
         form.setValue('file', e.target.files);
         setSelectedFile(URL.createObjectURL(form.getValues().file?.[0]))
     }
 
-    const onSubmit = async (values: z.infer<typeof ProfileUpdateValidationScheme>) => {
-        const valuesToSubmit = {...values, userId: user.$id};
-        console.log({valuesToSubmit});
-        
+    const onSubmit = async (values: z.infer<typeof ProfileUpdateValidationScheme>) => {        
         const updatedProfile = await updateProfile({...values, userId: user.$id});
         if(!updatedProfile) {
             toast({

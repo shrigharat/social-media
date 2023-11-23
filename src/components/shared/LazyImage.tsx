@@ -18,10 +18,9 @@ const LazyImage = ({
 }: LazyImageProps) => {
 
     let skeletonImageUrl = `${imageUrl}&width=80&height=80`;
+    let actualUrl = `${imageUrl}&quality=50`;
 
-    const handleOriginalImageLoad = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-        console.log({target: (e.target as HTMLImageElement)});
-        
+    const handleOriginalImageLoad = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {        
         let skeletonDiv = (e.target as HTMLImageElement).parentNode;
         
         (skeletonDiv as HTMLDivElement).style.backgroundImage = '';
@@ -39,7 +38,7 @@ const LazyImage = ({
             }}
         >
             <img 
-                src={imageUrl || "/assets/icons/profile-placeholder.svg"} 
+                src={actualUrl || "/assets/icons/profile-placeholder.svg"} 
                 alt={alt}
                 className={className || ''}
                 loading='lazy'

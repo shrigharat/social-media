@@ -18,9 +18,7 @@ const SignUpForm = () => {
   const {mutateAsync: createUserAccount, isPending: isCreatingUser} = useCreateUserAccount();
   const {mutateAsync: signInAccount, isPending: isSigningIn} = useSignInAccount();
 
-  const {checkAuthUser, isLoading: isUserLoading} = useUserContext();
-
-  console.log(isUserLoading, isSigningIn);
+  const {checkAuthUser} = useUserContext();
 
   const form = useForm<z.infer<typeof SignupValidationSchema>>({
     resolver: zodResolver(SignupValidationSchema),
@@ -126,8 +124,8 @@ const SignUpForm = () => {
           />
           <Button type="submit" className="shad-button_primary">
             { 
-              isCreatingUser ? (
-                <Loader />
+              isCreatingUser || isSigningIn ? (
+                <Loader size={18} />
               ) : "Sign up" 
             }
           </Button>

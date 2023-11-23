@@ -7,8 +7,6 @@ import { POST_FORM_ACTIONS } from '@/constants';
 const EditPost = () => {
   const {id} = useParams();
   const { data: post, isLoading } = useGetPostById(id);
-
-  console.log({post});
   
   return (
     <div className='flex flex-1'>

@@ -33,7 +33,6 @@ const Explore = () => {
 
   const shouldShowSearchResults = searchValue !== "";
   const shouldShowPosts = !shouldShowSearchResults && posts.pages.every((item) => item.documents.length === 0)
-  console.log({posts, shouldShowPosts, shouldShowSearchResults});
 
   return (
     <div className="explore-container">

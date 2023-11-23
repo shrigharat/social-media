@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 
 const HomePage = () => {
   
-  const {data: posts, isLoading, isError} = useGetRecentPosts();
+  const {data: posts, isLoading} = useGetRecentPosts();
   const {data: creators, isLoading: isCreatorsLoading} = useGetUsers();
   const trendingTopics: any = [
     {name: 'India vs Australia', postCount: 203, category: 'Sports'},
@@ -15,10 +15,20 @@ const HomePage = () => {
     {name: 'Startups', postCount: 72, category: 'Business'},
     {name: 'Stock Market', postCount: 72, category: 'Economy'},
     {name: 'Sam Altman', postCount: 72, category: 'Technology'},
-  ]
+  ];
 
-  console.log(isError);
+  let isError = true;
   
+  if(isError) {
+    return (
+      <div className='home-container h-40 flex text-center justify-center items-center text-gray-400 font-bold'>
+        <div className="home-posts">
+          Something went wrong! <br />
+          Please refresh the page or try again later.
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className='flex flex-1'>

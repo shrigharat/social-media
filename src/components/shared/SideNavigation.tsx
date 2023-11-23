@@ -28,9 +28,10 @@ const SideNavigation = () => {
           <img 
             src="/assets/images/logo.svg" 
             alt="website logo" 
-            width={130}
-            height={325}
+            width={40}
+            height={40}
           />
+          <h2 className='text-xl font-bold'>Media Social</h2>
         </Link>
         {
           isAuthenticated ? (
@@ -42,7 +43,7 @@ const SideNavigation = () => {
                   className='rounded-full w-[32px] h-[32px]'
                 />
                 <div className='flex flex-col'>
-                  <p className='body-bold'>{user.name || "Anonymous User"}</p>
+                  <p className='text-sm font-bold'>{user.name || "Anonymous User"}</p>
                   <p className='small-regular text-light-3'>@{user.username || "anonymous"}</p>
                 </div>
               </>

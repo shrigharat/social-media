@@ -28,12 +28,9 @@ const Profile = () => {
     )
   }
 
-  console.log({user});
-  
-
   return (
     <div className="profile-container">
-      <div className="account-details flex justify-start items-start gap-8">
+      <div className="account-details flex flex-col md:flex-row justify-start items-start gap-8">
         <div className="mr-12 relative overflow-hidden rounded-full">
           <LazyImage 
             imageUrl={user?.imageUrl || '/assets/icons/profile-placeholder.svg'} 
@@ -44,7 +41,7 @@ const Profile = () => {
         </div>
 
         <div className="flex flex-col gap-8">
-          <div className="top-section flex gap-12">
+          <div className="top-section flex flex-col md:flex-row gap-4 md:gap-12">
             <div className="name-section flex-col">
               <h1 className="text-3xl">{user?.name}</h1>
               <p className="subtle-semibold lg:small-regular text-light-3">@{user?.username}</p>

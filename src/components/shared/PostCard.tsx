@@ -14,9 +14,6 @@ const PostCard = ({post}: PostCardProps) => {
 
     if(!post.creator) return;
 
-    console.log({post});
-    
-
     return (
         <div className="post-card">
             <div className="flex-between px-3 pt-5">

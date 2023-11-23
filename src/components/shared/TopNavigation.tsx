@@ -20,8 +20,8 @@ const TopNavigation = () => {
           <img
             src="/assets/images/logo.svg"
             alt="logo"
-            width={130}
-            height={325}
+            width={40}
+            height={40}
           />
         </Link>
 

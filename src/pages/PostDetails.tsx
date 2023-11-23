@@ -19,7 +19,6 @@ const PostDetails = () => {
     data: userRelatedPosts, 
     isLoading: relatedPostsLoading
   } = useGetUserPosts(post?.creator.$id);
-  console.log({userRelatedPosts});
   const {mutate: deletePost} = useDeletePost();
 
   const handleDeletePost = async () => {
