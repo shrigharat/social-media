@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 
 const HomePage = () => {
   
-  const {data: posts, isLoading} = useGetRecentPosts();
+  const {data: posts, isLoading, isError} = useGetRecentPosts();
   const {data: creators, isLoading: isCreatorsLoading} = useGetUsers();
   const trendingTopics: any = [
     {name: 'India vs Australia', postCount: 203, category: 'Sports'},
@@ -16,8 +16,6 @@ const HomePage = () => {
     {name: 'Stock Market', postCount: 72, category: 'Economy'},
     {name: 'Sam Altman', postCount: 72, category: 'Technology'},
   ];
-
-  let isError = true;
   
   if(isError) {
     return (
