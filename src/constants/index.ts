@@ -98,11 +98,13 @@ export const bottombarLinks = [
     imgURL: "/assets/icons/bookmark.svg",
     route: "/saved",
     label: "Saved",
+    requireLogin: true,
   },
   {
     imgURL: "/assets/icons/gallery-add.svg",
     route: "/create-post",
     label: "Create",
+    requireLogin: true,
   },
 ];
 

@@ -6,7 +6,7 @@ import { useUserContext } from '@/context/AuthContext'
 
 const TopNavigation = () => {
   const navigate = useNavigate();
-  const { user } = useUserContext();
+  const { user, isAuthenticated } = useUserContext();
   const { mutate: signOut, isSuccess } = useSignOut();
 
   useEffect(() => {
@@ -24,22 +24,29 @@ const TopNavigation = () => {
             height={40}
           />
         </Link>
-
-        <div className="flex gap-4">
-          <Button
-            variant="ghost"
-            className="shad-button_ghost"
-            onClick={() => signOut()}>
-            <img src="/assets/icons/logout.svg" alt="logout" />
-          </Button>
-          <Link to={`/profile/${user.id}`} className="flex-center gap-3">
-            <img
-              src={user.imageUrl || "/assets/icons/profile-placeholder.svg"}
-              alt="profile"
-              className="h-8 w-8 rounded-full"
-            />
-          </Link>
-        </div>
+        {
+          isAuthenticated ? (
+            <div className="flex gap-4">
+              <Button
+                variant="ghost"
+                className="shad-button_ghost"
+                onClick={() => signOut()}>
+                <img src="/assets/icons/logout.svg" alt="logout" />
+              </Button>
+              <Link to={`/profile/${user.id}`} className="flex-center gap-3">
+                <img
+                  src={user.imageUrl || "/assets/icons/profile-placeholder.svg"}
+                  alt="profile"
+                  className="h-8 w-8 rounded-full"
+                />
+              </Link>
+            </div>   
+          ) : (
+            <Link to='/sign-in' className='bg-dark-4 text-primary-500 text-sm px-3 py-2 rounded-md border border-slate-800'>
+              Login
+            </Link>
+          )
+        }
       </div>
     </section>
   );

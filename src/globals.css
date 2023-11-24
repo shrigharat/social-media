@@ -34,6 +34,7 @@
 
 .ReactModal__Overlay{
   background-color: rgba(0,0,0,.75) !important;
+  z-index: 22 !important;
 }
 
 /* .soft-primary{

@@ -1,19 +1,23 @@
 import { bottombarLinks } from '@/constants'
-import { Link, useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
+import { Button } from '../ui/button';
+import { INavLink } from '@/types';
+import { useUserContext } from '@/context/AuthContext';
 
 const BottomNavigation = () => {
     const { pathname } = useLocation();
+    const { handleRouteChange } = useUserContext();
 
     return (
         <section className='bottom-bar'>
             {
-                bottombarLinks.map((link) => {
+                bottombarLinks.map((link: INavLink) => {
                     const isActive = pathname === link.route;
                     return (
-                        <Link 
+                        <Button 
                             className={`${isActive && 'rounded-[10px] bg-primary-500/20'} flex-center flex-col p-3 transition`} 
                             key={`bottombar-${link.label}`} 
-                            to={link.route}
+                            onClick={() => handleRouteChange(link)}
                         >
                             <img 
                                 src={link.imgURL} 
@@ -23,7 +27,7 @@ const BottomNavigation = () => {
                                 className={`${isActive && 'filled'}`}
                             />
                             {/* <p className='tiny-medium text-medium-2'>{link.label}</p> */}
-                        </Link>
+                        </Button>
                     )
                 })
             }
