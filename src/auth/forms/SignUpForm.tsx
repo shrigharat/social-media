@@ -60,11 +60,11 @@ const SignUpForm = () => {
   return (
     <Form {...form}>
       <div className="sm:w-420 flex-center flex-col">
-        <img src="/assets/images/logo.svg" alt="logo" />
+        <img src="/assets/images/logo.svg" className="w-20 h-20 mb-2" alt="logo" />
         <h2 className="h2-bold md:h3-bold pt-5 sm:pt-2">
           Create a new account
         </h2>
-        <p className="text-light-3 small-medium md:nase-regular mt-2">To start using Snapgram, please enter your details</p>
+        <p className="text-light-3 small-medium md:base-regular mt-2">To start using Snapgram, please enter your details</p>
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5 w-full mt-4">
           <FormField
             control={form.control}

@@ -48,7 +48,7 @@ const SignInForm = () => {
   return (
     <Form {...form}>
       <div className="sm:w-420 flex-center flex-col">
-        <img src="/assets/images/logo.svg" alt="logo" />
+        <img src="/assets/images/logo.svg" className="w-20 h-20 mb-2" alt="logo" />
         <h2 className="h2-bold md:h3-bold pt-5 sm:pt-2">
           Welcome back
         </h2>
@@ -96,7 +96,7 @@ const SignInForm = () => {
               ) : "Sign in" 
             }
           </Button>
-          <p className="text-small-reguar text-light-2 text-center mt-2">
+          <p className="text-small-regular text-light-2 text-center mt-2">
             Don't have an account ? 
             <Link 
               to='/sign-up' 
