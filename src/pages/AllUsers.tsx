@@ -1,11 +1,13 @@
 import LazyImage from "@/components/shared/LazyImage"
 import Loader from "@/components/shared/Loader";
 import { Button } from "@/components/ui/button"
+import { useUserContext } from "@/context/AuthContext";
 import { useGetUsers } from "@/lib/react-query/queries";
 import { Link } from "react-router-dom"
 
 const AllUsers = () => {
-  const {data: allUsers, isLoading} = useGetUsers();
+  const {user} = useUserContext();
+  const {data: allUsers, isLoading} = useGetUsers(user.id);
 
   return (
     <div className='flex flex-1'>

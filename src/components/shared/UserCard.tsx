@@ -5,9 +5,10 @@ import LazyImage from "./LazyImage";
 
 type UserCardProps = {
     user: Models.Document;
+    isFollowing?: boolean;
 }
 
-const UserCard = ({ user }: UserCardProps) => {
+const UserCard = ({ user, isFollowing = false }: UserCardProps) => {
     return (
         <Link to={`/profile/${user.$id}`} className="user-card">
             <div className="relative overflow-hidden rounded-full">
@@ -29,7 +30,7 @@ const UserCard = ({ user }: UserCardProps) => {
                 </p>
             </div>
             <Button type="button" size="sm" className="ms-auto px-5 bg-primary-500/10 text-primary-500">
-                Follow
+                { isFollowing ? 'Following' : 'Follow'}
             </Button>
         </Link>
     )

@@ -2,15 +2,20 @@ import Loader from '@/components/shared/Loader';
 import PostCard from '@/components/shared/PostCard';
 import UserCard from '@/components/shared/UserCard';
 import { useUserContext } from '@/context/AuthContext';
-import { useGetRecentPosts, useGetUsers } from '@/lib/react-query/queries'
+import { useGetFollowing, useGetRecentPosts, useGetUsers } from '@/lib/react-query/queries'
 import { Models } from 'appwrite'
 import { Link } from 'react-router-dom';
 
 const HomePage = () => {
   
-  const {data: posts, isLoading, isError} = useGetRecentPosts();
   const {user} = useUserContext();
-  const {data: creators, isLoading: isCreatorsLoading} = useGetUsers(user.id, 5);
+  const {data: posts, isLoading, isError} = useGetRecentPosts();
+  const {data: creators, isLoading: isCreatorsLoading} = useGetUsers('', 5);
+  const {data: following} = useGetFollowing(user.id);
+  const followingMap: any = {};
+  following?.forEach((doc: Models.Document) => followingMap[doc.following] = doc.follower);
+  console.log({followingMap})
+
   const trendingTopics: any = [
     {name: 'India vs Australia', postCount: 203, category: 'Sports'},
     {name: 'Figma latest update', postCount: 72, category: 'Technology'},
@@ -69,7 +74,10 @@ const HomePage = () => {
                 {
                   creators?.documents.slice(0, 5).map((creator: Models.Document) => (
                     <li key={creator?.$id}>
-                      <UserCard user={creator} />
+                      <UserCard 
+                        user={creator} 
+                        isFollowing={!!followingMap[creator.$id]}
+                      />
                     </li>
                   ))
                 }

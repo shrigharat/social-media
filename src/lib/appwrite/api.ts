@@ -480,7 +480,7 @@ export async function getRecentPosts(limit?: number) {
 export async function getUsers(userId: string, limit?: number) {
     const queries = [
         Query.orderDesc('$createdAt'),
-        Query.limit(limit || 10)
+        Query.limit(limit || 20)
     ];
     if(userId) {
         queries.push(Query.notEqual('$id', [userId]))
@@ -567,12 +567,26 @@ export async function getFollowers(userId?: string) {
 
         return followers.documents;
     } catch (error) {
-        
+        console.log(error);
     }
 }
 
-export async function getFollowing(userId: string) {
+export async function getFollowing(userId?: string) {
+    try {
+        if(!userId) throw Error;
+        
+        const followingDocs = await databases.listDocuments(
+            appwriteConfig.databaseId,
+            appwriteConfig.followersCollectionId,
+            [Query.equal('follower', userId)]
+        )
 
+        if(!followingDocs?.documents) throw Error;
+
+        return followingDocs.documents;
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 export async function getUserById(userId?: string) {

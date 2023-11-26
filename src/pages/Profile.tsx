@@ -17,7 +17,7 @@ const Profile = () => {
   const {data: userPosts, isLoading: postsLoading} = useGetUserPosts(currentProfileId);
   const {mutateAsync: followUser, isPending: isFollowPending} = useFollowUser();
   const {mutateAsync: unFollowUser, isPending: isUnFollowPending} = useUnFollowUser();
-  const {data: followers, isLoading: isFollowersLoading} = useGetFollowers(currentProfileId);
+  const {data: followers} = useGetFollowers(currentProfileId);
   const [isAlreadyFollowing, setIsAlreadyFollowing] = useState<boolean>(false);
 
   console.log({followers, isAlreadyFollowing});
