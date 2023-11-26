@@ -123,6 +123,12 @@ export const bottombarLinks = [
     label: "Create",
     requireLogin: true,
   },
+  {
+    imgURL: "/assets/icons/notification.svg",
+    route: "/notifications",
+    label: "Notifications",
+    requireLogin: true,
+  }
 ];
 
 export const POST_FORM_ACTIONS = {

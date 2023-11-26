@@ -14,7 +14,6 @@ const HomePage = () => {
   const {data: following} = useGetFollowing(user.id);
   const followingMap: any = {};
   following?.forEach((doc: Models.Document) => followingMap[doc.following] = doc.follower);
-  console.log({followingMap})
 
   const trendingTopics: any = [
     {name: 'India vs Australia', postCount: 203, category: 'Sports'},

@@ -76,8 +76,8 @@ const Profile = () => {
 
   return (
     <div className="profile-container">
-      <div className="account-details flex flex-col md:flex-row justify-start items-start gap-8">
-        <div className="mr-12 relative overflow-hidden rounded-full">
+      <div className="account-details flex flex-col md:flex-row items-center md:items-start gap-8">
+        <div className="md:mr-12 relative overflow-hidden rounded-full">
           <LazyImage 
             imageUrl={user?.imageUrl || '/assets/icons/profile-placeholder.svg'} 
             alt="user profile image" 
@@ -86,13 +86,13 @@ const Profile = () => {
           />
         </div>
 
-        <div className="flex flex-col gap-8">
+        <div className="flex flex-col gap-8 items-center md:items-start">
           <div className="top-section flex flex-col md:flex-row gap-4 md:gap-12">
-            <div className="name-section flex-col">
+            <div className="name-section flex flex-col items-center md:items-start">
               <h1 className="text-3xl">{user?.name}</h1>
-              <p className="subtle-semibold lg:small-regular text-light-3">@{user?.username}</p>
+              <p className="text-[16px] font-semibold text-light-3">@{user?.username}</p>
             </div>
-            <div className="action-buttons flex gap-4">
+            <div className="action-buttons flex gap-4 justify-center md:justify-start">
               {
                 isAlreadyFollowing ? (
                   <Button className="bg-primary-500/20 text-primary-500 border border-primary-500" onClick={handleUnfollowButton}>

@@ -62,9 +62,9 @@ const PostCard = ({post}: PostCardProps) => {
 
             <Link to={`/posts/${post.$id}`}>
                 <div className="small-medium lg:base-medium p-3">
-                    <p className='tracking-normal font-normal text-light-2'>
-                        {post.caption.split('\n').map((line: string) => (<p>{line}</p>))}
-                    </p>
+                    <div className='tracking-normal font-normal text-light-2'>
+                        {post.caption.split('\n').map((line: string, index: number) => (<p key={index}>{line}</p>))}
+                    </div>
                     <ul className="flex gap-1 mt-2 flex-wrap">
                         {
                             post.tags.map((tag: string, index: string) => (
