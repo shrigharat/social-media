@@ -21,7 +21,8 @@ const INITIAL_STATE = {
     checkAuthUser: async () => false as boolean,
     showLoginDialog: false,
     handleRouteChange: () => {},
-    setShowLoginDialog: () => {}
+    setShowLoginDialog: () => {},
+    isPWA: false
 }
 
 const AuthContext = createContext<IContextType>(INITIAL_STATE);
@@ -31,6 +32,7 @@ const AuthProvider = ({children}: {children: React.ReactNode}) => {
     const [isLoading, setIsLoading] = useState(false);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [showLoginDialog, setShowLoginDialog] = useState(false);
+    const [isPWA, setIsPWA] = useState(false);
     const navigate = useNavigate();
 
     const handleRouteChange = (routeObj: INavLink) => {
@@ -40,6 +42,13 @@ const AuthProvider = ({children}: {children: React.ReactNode}) => {
             navigate(routeObj.route);
         }
     }
+
+    useEffect(() => {
+        const mqStandAlone = '(display-mode: standalone)';
+        if ('standalone' as string in navigator || window.matchMedia(mqStandAlone).matches) {
+          setIsPWA(true);
+        }
+    }, []);
 
     const checkAuthUser = async () => {
         try {
@@ -86,7 +95,8 @@ const AuthProvider = ({children}: {children: React.ReactNode}) => {
         checkAuthUser,
         handleRouteChange,
         showLoginDialog,
-        setShowLoginDialog
+        setShowLoginDialog,
+        isPWA
     }
 
     return (

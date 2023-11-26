@@ -11,15 +11,19 @@ import SendIcon from './SendIcon';
 import { NOTIFICATION_TYPES } from '@/constants';
 import SaveIcon from './SaveIcon';
 import { useUserContext } from '@/context/AuthContext';
+import ShareIcon from './ShareIcon';
+import { useToast } from '../ui/use-toast';
 
 type PostStatsProps = {
     post: Models.Document;
     userId: string;
     enableComments?: boolean;
+    enableShare?: boolean;
 }
 
-const PostStats = ({post, userId, enableComments = false}: PostStatsProps) => {
+const PostStats = ({post, userId, enableComments = false, enableShare = false}: PostStatsProps) => {
     const location = useLocation();
+    const {toast} = useToast();
     const likesList = post.likes.map((user: Models.Document) => user.$id)
 
     const [likes, setLikes] = useState<string[]>(likesList);
@@ -29,7 +33,7 @@ const PostStats = ({post, userId, enableComments = false}: PostStatsProps) => {
     const [comments, setComments] = useState<IComment[]>([]);
 
     const {data: currentUser} = useGetCurrentUser();
-    const {isAuthenticated, setShowLoginDialog} = useUserContext();
+    const {isAuthenticated, setShowLoginDialog, isPWA} = useUserContext();
 
     const {mutate: likePost} = useLikePost();
     const {mutate: sendLikeNotification} = useSendLikeNotification();
@@ -42,7 +46,7 @@ const PostStats = ({post, userId, enableComments = false}: PostStatsProps) => {
 
     useEffect(() => {
         setIsSaved(!!savedPostRecord);
-    }, [currentUser])
+    }, [currentUser]);
 
     const handleLikePost = (e: React.MouseEvent<HTMLOrSVGElement, MouseEvent>) => {
         e.stopPropagation();
@@ -112,6 +116,28 @@ const PostStats = ({post, userId, enableComments = false}: PostStatsProps) => {
         setIsSaved(true);
     }
 
+    const handleShareClick = (e: React.MouseEvent<HTMLOrSVGElement, MouseEvent>) => {
+        e.stopPropagation();
+
+        const urlToShare = `https://media-social.vercel.app/posts/${post.$id}`;
+
+        try {
+            if('share' as string in navigator) {
+                navigator.share({
+                    title: 'media-social.vercel.app',
+                    text: 'Check out this post on media social.',
+                    url: urlToShare,
+                  })
+                .then(() => console.log('Successful share'))
+                .catch((error) => console.log('Error sharing', error));
+            }
+        } catch (error) {
+            toast({
+                title: 'Could not share the post'
+            })
+        }
+    }
+
     const containerStyles = location.pathname.startsWith('/profile') ? 'w-full' : '';
 
     return (
@@ -134,6 +160,17 @@ const PostStats = ({post, userId, enableComments = false}: PostStatsProps) => {
                                 height={28}
                                 onClick={handleCommentClick}
                             />
+                        )
+                    }
+                    {
+                        enableShare && isPWA && (
+                            <span className='ml-2'>
+                                <ShareIcon
+                                    width={17}
+                                    height={20}
+                                    onClick={handleShareClick}
+                                />
+                            </span>
                         )
                     }
                 </div>

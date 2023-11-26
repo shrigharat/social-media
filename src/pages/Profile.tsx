@@ -3,20 +3,66 @@ import Loader from "@/components/shared/Loader";
 import PostsGrid from "@/components/shared/PostsGrid";
 import { Button } from "@/components/ui/button";
 import { useUserContext } from "@/context/AuthContext";
-import { useGetUserById, useGetUserPosts } from "@/lib/react-query/queries";
-import { Link, useParams } from "react-router-dom"
+import { useFollowUser, useGetFollowers, useGetUserById, useGetUserPosts, useUnFollowUser } from "@/lib/react-query/queries";
+import { Models } from "appwrite";
+import { useEffect, useState } from "react";
+import { Link, useParams, useSearchParams } from "react-router-dom"
 
 const Profile = () => {
 
-  const {id} = useParams();
-  const {user: currentUser, setShowLoginDialog} = useUserContext();
-  const {data: user, isLoading: isUserLoading} = useGetUserById(id);
-  const {data: userPosts, isLoading: postsLoading} = useGetUserPosts(id);
+  const {id: currentProfileId} = useParams();
+  const [searchParams]  = useSearchParams();
+  const {user: currentUser, setShowLoginDialog, isAuthenticated} = useUserContext();
+  const {data: user, isLoading: isUserLoading} = useGetUserById(currentProfileId);
+  const {data: userPosts, isLoading: postsLoading} = useGetUserPosts(currentProfileId);
+  const {mutateAsync: followUser, isPending: isFollowPending} = useFollowUser();
+  const {mutateAsync: unFollowUser, isPending: isUnFollowPending} = useUnFollowUser();
+  const {data: followers, isLoading: isFollowersLoading} = useGetFollowers(currentProfileId);
+  const [isAlreadyFollowing, setIsAlreadyFollowing] = useState<boolean>(false);
 
+  console.log({followers, isAlreadyFollowing});
+  console.log({searchParams});
+  
   const handleFollowButton = (e: any) => {
     e.stopPropagation();
-    setShowLoginDialog(true);
+    if(!currentProfileId) return;
+
+    if(isAuthenticated) {
+      followUser({
+        followerId: currentUser.id,
+        followingId: currentProfileId,
+        followerUsername: currentUser.username,
+        ref: searchParams.get('ref') || '',
+        refId: searchParams.get('refId') || '',
+      });
+      setIsAlreadyFollowing(true);
+    } else {
+      setShowLoginDialog(true);
+    }
   }
+
+  const handleUnfollowButton = (e: any) => {
+    e.stopPropagation();
+    if(!currentProfileId) return;
+
+    if(isAuthenticated) {
+      unFollowUser({
+        followerId: currentUser.id,
+        followingId: currentProfileId,
+        followerUsername: currentUser.username,
+      });
+      setIsAlreadyFollowing(false);
+    } else {
+      setShowLoginDialog(true);
+    }
+  }
+
+  useEffect(() => {
+    let alreadyFollowing = followers?.some && followers.some(
+      (followerDoc: Models.Document) => followerDoc.follower === currentUser.id
+    ) || false;
+    setIsAlreadyFollowing(alreadyFollowing);
+  }, [followers])
 
   if(isUserLoading) {
     return (
@@ -47,11 +93,19 @@ const Profile = () => {
               <p className="subtle-semibold lg:small-regular text-light-3">@{user?.username}</p>
             </div>
             <div className="action-buttons flex gap-4">
-              <Button className="shad-button_primary" onClick={handleFollowButton}>
-                Follow
-              </Button>
               {
-                id === currentUser.id && (
+                isAlreadyFollowing ? (
+                  <Button className="bg-primary-500/20 text-primary-500 border border-primary-500" onClick={handleUnfollowButton}>
+                    { isUnFollowPending ? <Loader size={16} /> : 'Following'}
+                  </Button>
+                ) : (
+                  <Button className="shad-button_primary" onClick={handleFollowButton}>
+                    {  isFollowPending ? <Loader size={16} /> : 'Follow' }
+                  </Button>
+                )
+              }
+              {
+                currentProfileId === currentUser.id && (
                   <Link to='/update-profile'>
                     <Button className="border-slate-300 border-2">
                       Edit profile
@@ -64,7 +118,7 @@ const Profile = () => {
 
           <div className="follower-info flex gap-8 justify-start items-center">
             <div className="followers">
-              <span className="mr-2 font-medium text-primary-500">123</span>
+              <span className="mr-2 font-medium text-primary-500">{ postsLoading ? '' : userPosts?.length  }</span>
               <span>posts</span>
             </div>
             <div className="posts">

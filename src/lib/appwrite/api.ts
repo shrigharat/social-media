@@ -1,7 +1,7 @@
-import { INewPost, INewUser, INotificationParam, IUpdatePost, IUpdateUser } from "@/types";
+import { IFollowerParams, INewPost, INewUser, INotificationParam, IUpdatePost, IUpdateUser } from "@/types";
 import { account, appwriteConfig, avatars, databases, storage } from "./config";
 import { ID, Query } from "appwrite";
-import { getAccountCreationNotification } from "@/constants";
+import { NOTIFICATION_TYPES, getAccountCreationNotification } from "@/constants";
 
 export async function createUserAccount(user: INewUser) {
     try {
@@ -304,6 +304,15 @@ export async function sendNotification({
             postId,
             timestamp: new Date().toISOString()
         }
+        if(type === "newFollower" && recipientId && senderId) {
+            const alreadyExists = await databases.listDocuments(
+                appwriteConfig.databaseId,
+                appwriteConfig.notificationsCollectionId,
+                [Query.equal('recipientId', recipientId), Query.equal('senderId', senderId), Query.equal('type', type)]
+            )
+
+            if (alreadyExists.documents) return false;
+        }
         await databases.createDocument(
             appwriteConfig.databaseId,
             appwriteConfig.notificationsCollectionId,
@@ -344,6 +353,25 @@ export async function likePost(postId: string, likesArray: string[]) {
             postId,
             {
                 likes: likesArray
+            }
+        )
+
+        if(!updatedPost) throw Error;
+
+        return updatedPost;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export async function viewPost(postId: string, currentViews = 0) {
+    try {
+        const updatedPost = await databases.updateDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.postsCollectionId,
+            postId,
+            {
+                views: currentViews + 1
             }
         )
 
@@ -449,15 +477,19 @@ export async function getRecentPosts(limit?: number) {
     }
 }
 
-export async function getUsers(limit?: number) {
+export async function getUsers(userId: string, limit?: number) {
+    const queries = [
+        Query.orderDesc('$createdAt'),
+        Query.limit(limit || 10)
+    ];
+    if(userId) {
+        queries.push(Query.notEqual('$id', [userId]))
+    }
     try {
         const users = await databases.listDocuments(
             appwriteConfig.databaseId,
             appwriteConfig.usersCollectionId,
-            [
-                Query.orderDesc('$createdAt'),
-                Query.limit(limit || 10)
-            ]
+            queries
         )
 
         if(!users) throw Error;
@@ -466,6 +498,81 @@ export async function getUsers(limit?: number) {
     } catch (error) {
         console.log(error);
     }
+}
+
+export async function followUser({
+    followerId, followingId, followerUsername, ref, refId
+}: IFollowerParams) {
+    if(!followerId || !followingId) throw Error;
+
+    try {
+        const followerDoc = await databases.createDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.followersCollectionId,
+            `${followerId.slice(0,10)}${followingId.slice(0,10)}`,
+            {
+                follower: followerId,
+                following: followingId,
+                ref: ref,
+                refId: refId,
+            }
+        );
+
+        await sendNotification({
+            recipientId: followingId,
+            senderId: followerId,
+            senderUsername: followerUsername,
+            type: NOTIFICATION_TYPES.NEW_FOLLOWER,
+            postId: ''
+        });
+
+        if(!followerDoc) throw Error;
+
+        return followerDoc;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export async function unFollowUser({
+    followerId, followingId
+    }: IFollowerParams
+) {
+    if(!followerId || !followingId) throw Error;
+
+    try {
+        await databases.deleteDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.followersCollectionId,
+            `${followerId.slice(0,10)}${followingId.slice(0,10)}`,
+        );
+
+        return true;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export async function getFollowers(userId?: string) {
+    try {
+        if(!userId) throw Error;
+
+        const followers = await databases.listDocuments(
+            appwriteConfig.databaseId,
+            appwriteConfig.followersCollectionId,
+            [Query.equal('following', userId)]
+        );
+
+        if(!followers?.documents) return;
+
+        return followers.documents;
+    } catch (error) {
+        
+    }
+}
+
+export async function getFollowing(userId: string) {
+
 }
 
 export async function getUserById(userId?: string) {

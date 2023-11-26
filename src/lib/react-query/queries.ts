@@ -4,8 +4,8 @@ import {
     useQueryClient,
     useInfiniteQuery
 } from '@tanstack/react-query'
-import { createPost, createUserAccount, deletePost, getCurrentUser, getPostById, getPosts, getRecentPosts, getSavedPosts, getUserById, getUserPosts, getUsers, likePost, savePost, searchPosts, sendNotification, signInAccount, signOutAccount, unSavePost, updatePost, updatedUser } from '../appwrite/api'
-import { INewPost, INewUser, INotificationParam, IUpdatePost, IUpdateUser } from '@/types'
+import { createPost, createUserAccount, deletePost, followUser, getCurrentUser, getFollowers, getPostById, getPosts, getRecentPosts, getSavedPosts, getUserById, getUserPosts, getUsers, likePost, savePost, searchPosts, sendNotification, signInAccount, signOutAccount, unFollowUser, unSavePost, updatePost, updatedUser, viewPost } from '../appwrite/api'
+import { IFollowerParams, INewPost, INewUser, INotificationParam, IUpdatePost, IUpdateUser } from '@/types'
 import { QUERY_KEYS } from './queryKeys'
 
 export const useCreateUserAccount = () => {
@@ -158,76 +158,107 @@ export const useSendLikeNotification = () => {
 }
   
 export const useSavePost = () => {
-    const queryClient = useQueryClient();
-    return useMutation({
-      mutationFn: ({ userId, postId }: { userId: string; postId: string }) =>
-        savePost(postId, userId),
-      onSuccess: () => {
-        queryClient.invalidateQueries({
-          queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
-        });
-        queryClient.invalidateQueries({
-          queryKey: [QUERY_KEYS.GET_POSTS],
-        });
-        queryClient.invalidateQueries({
-          queryKey: [QUERY_KEYS.GET_CURRENT_USER],
-        });
-      },
-    });
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ userId, postId }: { userId: string; postId: string }) =>
+      savePost(postId, userId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_POSTS],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_CURRENT_USER],
+      });
+    },
+  });
 };
   
 export const useDeleteSavedPost = () => {
-    const queryClient = useQueryClient();
-    return useMutation({
-      mutationFn: (savedRecordId: string) => unSavePost(savedRecordId),
-      onSuccess: () => {
-        queryClient.invalidateQueries({
-          queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
-        });
-        queryClient.invalidateQueries({
-          queryKey: [QUERY_KEYS.GET_POSTS],
-        });
-        queryClient.invalidateQueries({
-          queryKey: [QUERY_KEYS.GET_CURRENT_USER],
-        });
-      },
-    });
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (savedRecordId: string) => unSavePost(savedRecordId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_POSTS],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_CURRENT_USER],
+      });
+    },
+  });
 };
   
-  export const useGetCurrentUser = () => {
-    return useQuery({
-      queryKey: [QUERY_KEYS.GET_CURRENT_USER],
-      queryFn: getCurrentUser,
-    });
-  };
+export const useGetCurrentUser = () => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_CURRENT_USER],
+    queryFn: getCurrentUser,
+  });
+};
+
+export const useGetUsers = (userId: string, limit?: number) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_USERS, limit, userId],
+    queryFn: () => getUsers(userId, limit),
+  });
+};
+
+export const useGetUserById = (userId?: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_USER_BY_ID, userId],
+    queryFn: () => getUserById(userId),
+    enabled: !!userId,
+  });
+};
   
-  export const useGetUsers = (limit?: number) => {
-    return useQuery({
-      queryKey: [QUERY_KEYS.GET_USERS],
-      queryFn: () => getUsers(limit),
-    });
-  };
-  
-  export const useGetUserById = (userId?: string) => {
-    return useQuery({
-      queryKey: [QUERY_KEYS.GET_USER_BY_ID, userId],
-      queryFn: () => getUserById(userId),
-      enabled: !!userId,
-    });
-  };
-  
-  export const useUpdateUser = () => {
-    const queryClient = useQueryClient();
-    return useMutation({
-      mutationFn: (user: IUpdateUser) => updatedUser(user),
-      onSuccess: (data) => {
-        queryClient.invalidateQueries({
-          queryKey: [QUERY_KEYS.GET_CURRENT_USER],
-        });
-        queryClient.invalidateQueries({
-          queryKey: [QUERY_KEYS.GET_USER_BY_ID, data?.$id],
-        });
-      },
-    });
-  };
-  
+export const useUpdateUser = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (user: IUpdateUser) => updatedUser(user),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_CURRENT_USER],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_USER_BY_ID, data?.$id],
+      });
+    },
+  });
+};
+
+export const useFollowUser = () => {
+  return useMutation({
+    mutationFn: (
+      followerParams: IFollowerParams
+    ) => followUser(followerParams),
+  })
+}
+
+export const useUnFollowUser = () => {
+  return useMutation({
+    mutationFn: (
+      followerParams: IFollowerParams
+    ) => unFollowUser(followerParams),
+  })
+}
+
+export const useGetFollowers = (userId?: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_FOLLOWERS, userId],
+    queryFn: () => getFollowers(userId),
+    enabled: !!userId,
+  })
+}
+
+export const usePostViewed = () => {
+  return useMutation({
+    mutationFn: (
+      {postId, currentViews}: {postId: string, currentViews: number}
+    ) => viewPost(postId, currentViews)
+  })
+}

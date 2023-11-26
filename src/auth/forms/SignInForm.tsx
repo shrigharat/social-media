@@ -92,7 +92,7 @@ const SignInForm = () => {
           <Button type="submit" className="shad-button_primary">
             { 
               isUserLoading ? (
-                <Loader />
+                <Loader size={16} />
               ) : "Sign in" 
             }
           </Button>

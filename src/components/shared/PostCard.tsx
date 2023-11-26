@@ -18,7 +18,7 @@ const PostCard = ({post}: PostCardProps) => {
         <div className="post-card">
             <div className="flex-between px-3 pt-5">
                 <div className="flex items-center gap-3">
-                    <Link to={`/profile/${post.creator.$id}`} className='relative overflow-hidden rounded-full'>
+                    <Link to={`/profile/${post.creator.$id}?ref=post&refId=${post.$id}`} className='relative overflow-hidden rounded-full'>
                         <LazyImage 
                             imageUrl={
                                 post.creator?.imageUrl || 
@@ -29,7 +29,7 @@ const PostCard = ({post}: PostCardProps) => {
                         />
                     </Link>
 
-                    <Link to={`/profile/${post.creator.$id}`}>
+                    <Link to={`/profile/${post.creator.$id}?ref=post&refId=${post.$id}`}>
                         <div className="flex flex-col">
                             <p className="base-medium lg:body-bold text-light-2 tracking-tight">
                                 {post.creator.name}
@@ -88,6 +88,7 @@ const PostCard = ({post}: PostCardProps) => {
                 post={post} 
                 userId={user.id} 
                 enableComments={true}
+                enableShare={true}
             />
         </div>
     )

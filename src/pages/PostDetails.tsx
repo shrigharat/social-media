@@ -4,8 +4,9 @@ import PostStats from '@/components/shared/PostStats'
 import PostsGrid from '@/components/shared/PostsGrid'
 import { Button } from '@/components/ui/button'
 import { useUserContext } from '@/context/AuthContext'
-import { useDeletePost, useGetPostById, useGetUserPosts } from '@/lib/react-query/queries'
+import { useDeletePost, useGetPostById, useGetUserPosts, usePostViewed } from '@/lib/react-query/queries'
 import { multiFormatDateString } from '@/lib/utils'
+import { useEffect } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 
 const PostDetails = () => {
@@ -20,6 +21,13 @@ const PostDetails = () => {
     isLoading: relatedPostsLoading
   } = useGetUserPosts(post?.creator.$id);
   const {mutate: deletePost} = useDeletePost();
+  const {mutateAsync: postViewed} = usePostViewed();
+
+  useEffect(() => {
+    if(!id || !post) return;
+
+    postViewed({postId: id, currentViews: post.views || 0});
+  }, [post]);
 
   const handleDeletePost = async () => {
     if(!post) return;
@@ -68,7 +76,7 @@ const PostDetails = () => {
             <div className="post_details-info">
               <div className="flex-between w-full">
                 <Link
-                  to={`/profile/${post?.creator.$id}`}
+                  to={`/profile/${post?.creator.$id}?ref=post&refId=${post.$id}`}
                   className="flex items-center gap-3">
                   <img
                     src={

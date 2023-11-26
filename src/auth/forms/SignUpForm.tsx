@@ -125,7 +125,7 @@ const SignUpForm = () => {
           <Button type="submit" className="shad-button_primary">
             { 
               isCreatingUser || isSigningIn ? (
-                <Loader size={18} />
+                <Loader size={16} />
               ) : "Sign up" 
             }
           </Button>

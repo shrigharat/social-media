@@ -1,4 +1,4 @@
-import { NOTIFICATION_MESSAGES } from "@/constants"
+import { NOTIFICATION_MESSAGES, getLabelTextByNotificationType } from "@/constants"
 import { useUserContext } from "@/context/AuthContext"
 import { multiFormatDateString } from "@/lib/utils"
 import { INotificationForRecipient } from "@/types"
@@ -38,7 +38,7 @@ const Notifications = () => {
             ) : (
                 notifications.map((notification: INotificationForRecipient) => {
                   return (
-                    <div className="notification-row w-full flex justify-between items-center bg-dark-3 border border-gray-900 py-4 px-4 rounded-md text-left">
+                    <div key={notification.timestamp} className="notification-row w-full flex justify-between items-center bg-dark-3 border border-gray-900 py-4 pb-6 px-4 rounded-md text-left relative">
                       <div>
                         {
                           notification?.senderUsername && (
@@ -62,6 +62,13 @@ const Notifications = () => {
                           </Link>
                         )
                       }
+                      <div 
+                        className={`absolute bg-primary-500/20 border rounded-tl-md rounded-br-md right-0 bottom-0 text-[9px] px-3 uppercase gap tracking-widest border-primary-500 ${getLabelTextByNotificationType(notification.type) ? '' : 'invisible'}`} 
+                      >
+                        {
+                          getLabelTextByNotificationType(notification.type)
+                        }
+                      </div>
                     </div>
                   )
                 })

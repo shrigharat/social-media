@@ -21,7 +21,7 @@ const PostsGrid = ({
         <ul className="grid-container">
             {
                 posts?.map((post: Models.Document) => (
-                    <li className="relative min-w-80 h-80">
+                    <li className="relative min-w-80 h-80" key={post.$id}>
                         <Link to={`/posts/${post.$id}`} className="grid-post_link">
                             <LazyImage 
                                 imageUrl={post.imageUrl}

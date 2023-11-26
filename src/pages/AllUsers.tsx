@@ -33,18 +33,18 @@ const AllUsers = () => {
               {
                 allUsers?.documents.map((user: any) => {
                   return (
-                    <div className="flex flex-col p-4 justify-start items-center gap-4 bg-dark-3 border border-slate-800 rounded-md">
+                    <div className="flex flex-col p-4 justify-start items-center gap-4 bg-dark-3 border border-slate-800 rounded-md" key={user.$id}>
                       <LazyImage
                         imageUrl={user.imageUrl}
                         alt={`${user.name}'s profile picture`}
                         className="rounded-full w-20 h-20"
                       />
-                      <Link to={`/profile/${user.$id}`} className="text-center">
+                      <Link to={`/profile/${user.$id}?ref=explore`} className="text-center">
                         <p className="text-lg font-semibold">{user.name}</p>
                         <p className="text-sm font-medium text-gray-400">@{user.username}</p>
                       </Link>
                       <div className="flex flex-row gap-4">
-                        <Link to={`/profile/${user.$id}`} className="px-4 py-2 text-sm rounded-md border border-slate-700  text-primary-500">
+                        <Link to={`/profile/${user.$id}?ref=explore`} className="px-4 py-2 text-sm rounded-md border border-slate-700  text-primary-500">
                           View Profile
                         </Link>
                         <Button className="border border-primary-500 bg-primary-500/20 text-primary-500">

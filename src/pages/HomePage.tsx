@@ -1,6 +1,7 @@
 import Loader from '@/components/shared/Loader';
 import PostCard from '@/components/shared/PostCard';
 import UserCard from '@/components/shared/UserCard';
+import { useUserContext } from '@/context/AuthContext';
 import { useGetRecentPosts, useGetUsers } from '@/lib/react-query/queries'
 import { Models } from 'appwrite'
 import { Link } from 'react-router-dom';
@@ -8,7 +9,8 @@ import { Link } from 'react-router-dom';
 const HomePage = () => {
   
   const {data: posts, isLoading, isError} = useGetRecentPosts();
-  const {data: creators, isLoading: isCreatorsLoading} = useGetUsers();
+  const {user} = useUserContext();
+  const {data: creators, isLoading: isCreatorsLoading} = useGetUsers(user.id, 5);
   const trendingTopics: any = [
     {name: 'India vs Australia', postCount: 203, category: 'Sports'},
     {name: 'Figma latest update', postCount: 72, category: 'Technology'},
@@ -91,8 +93,8 @@ const HomePage = () => {
             ) : (
               <ul className='grid 2xl:grid-cols-2 gap-4'>
                 {
-                  trendingTopics.map((topic: any) => (
-                    <div className='flex gap-2 justify-between align-start px-2'>
+                  trendingTopics.map((topic: any, index: number) => (
+                    <div className='flex gap-2 justify-between align-start px-2' key={index}>
                       <div className='flex flex-col gap-1 justify-between'>
                         <h4 className='text-sm font-semibold'>{topic.name}</h4>
                         <span className='text-xs text-gray-400'>#{topic.category}</span>

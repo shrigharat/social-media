@@ -1,4 +1,4 @@
-import { INotification } from "@/types";
+import { INotification, NotificationType } from "@/types";
 
 export const userProfilePlaceholder = '/assets/icons/profile-placeholder.svg';
 
@@ -41,11 +41,13 @@ export const sidebarLinks = [
 
 export const NOTIFICATION_TYPES = {
   COMMENT_MENTION: 'commentMention',
+  COMMENT_ADDED: 'commentAdded',
   POST_LIKED : 'postLiked',
   POST_TAG : 'postTag',
   NEW_MESSAGE : 'newMessage',
   POST_TRENDING : 'postTrending',
   ACCOUNT_CREATED : 'accountCreated',
+  NEW_FOLLOWER: 'newFollower'
 } as const;
 
 export const NOTIFICATION_MESSAGES = {
@@ -54,7 +56,9 @@ export const NOTIFICATION_MESSAGES = {
   postTag: 'Tagged you in a post',
   newMessage: 'Messaged you',
   postTrending: 'Your post is trending',
-  accountCreated: 'Congratulations on creating your account!'
+  accountCreated: 'Congratulations on creating your account!',
+  newFollower: 'Followed you recently',
+  commentAdded: 'Added a comment on your post',
 } as const;
 
 export const getAccountCreationNotification = (userId: string) => ({
@@ -79,6 +83,19 @@ const populateNotifications = function(): INotification[] {
     });
   }
   return arr;
+}
+
+export const getLabelTextByNotificationType = (type: NotificationType) => {
+  switch(type) {
+    case "commentMention": return "Comment";
+    case "newFollower": return "Follower";
+    case "postLiked": 
+    case "postTag": 
+    case "postTrending":
+      return "Post";
+    case "newMessage": return "Message";
+    default: return "";
+  }
 }
 
 export const dummyNotifications: INotification[] = populateNotifications();

@@ -27,6 +27,7 @@ export type IContextType = {
     handleRouteChange: (newRoute: INavLink) => void;
     showLoginDialog: boolean;
     setShowLoginDialog: Function;
+    isPWA: boolean;
 };
   
 export type INewPost = {
@@ -85,12 +86,20 @@ export type NotificationType = (typeof NOTIFICATION_TYPES)[NotificationKeys];
 export type INotification = {
     type: NotificationType;
     recipientId: string;
-    senderId: string;
-    senderUsername: string;
     timestamp: string;
-    postId: string;
+    senderId?: string;
+    senderUsername?: string;
+    postId?: string;
 }
 
 export type INotificationParam = Omit<INotification, 'timestamp'>;
 
 export type INotificationForRecipient = Omit<INotification, 'recipientId'>;
+
+export type IFollowerParams = {
+    followerId: string;
+    followingId: string;
+    followerUsername: string;
+    ref?: string;
+    refId?: string;
+}
