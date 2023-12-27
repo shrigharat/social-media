@@ -2,14 +2,17 @@ import Loader from '@/components/shared/Loader';
 import PostCard from '@/components/shared/PostCard';
 import UserCard from '@/components/shared/UserCard';
 import { useUserContext } from '@/context/AuthContext';
-import { useGetFollowing, useGetRecentPosts, useGetUsers } from '@/lib/react-query/queries'
+import { useGetFollowing, useGetPosts, useGetUsers } from '@/lib/react-query/queries'
 import { Models } from 'appwrite'
+import { useEffect } from 'react';
+import { useInView } from 'react-intersection-observer';
 import { Link } from 'react-router-dom';
 
 const HomePage = () => {
+  const {ref, inView} = useInView();
   
   const {user} = useUserContext();
-  const {data: posts, isLoading, isError} = useGetRecentPosts();
+  const {data: posts, fetchNextPage, hasNextPage, error, isLoading} = useGetPosts();
   const {data: creators, isLoading: isCreatorsLoading} = useGetUsers('', 5);
   const {data: following} = useGetFollowing(user.id);
   const followingMap: any = {};
@@ -23,7 +26,10 @@ const HomePage = () => {
     {name: 'Sam Altman', postCount: 72, category: 'Technology'},
   ];
   
-  if(isError) {
+  console.log({posts});
+  
+  
+  if(error) {
     return (
       <div className='home-container h-40 flex text-center justify-center items-center text-gray-400 font-bold'>
         <div className="home-posts">
@@ -33,6 +39,14 @@ const HomePage = () => {
       </div>
     )
   }
+
+  useEffect(() => {
+    console.log({inView});
+    
+    if(inView) {
+      fetchNextPage();
+    }
+  }, [inView]);
 
   return (
     <div className='flex flex-1'>
@@ -46,13 +60,26 @@ const HomePage = () => {
                   <Loader />
                 </div>
               ) : (
-                <ul className='flex flex-col flex-1 gap-9 w-full mt-4'>
-                  {
-                    posts?.documents?.map((post: Models.Document) => (
-                      <PostCard key={post.$id} post={post} />
-                    ))
-                  }
-                </ul>
+                posts?.pages?.map((page: any) => {
+                  console.log({page});
+                  
+                  return (
+                    <ul className='flex flex-col flex-1 gap-9 w-full mt-4'>
+                      {
+                        page?.documents?.map((post: Models.Document) => (
+                          <PostCard key={post.$id} post={post} />
+                        ))
+                      }
+                    </ul>
+                  )
+                })
+              )
+            }
+            {
+              hasNextPage && (
+                <div ref={ref} className="mt-10">
+                  <Loader />
+                </div>
               )
             }
           </h2>
